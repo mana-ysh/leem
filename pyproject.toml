@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "leem"
+version = "0.1.0"
+description = "A library to learn embedder models via contrastive learning and so on"
+authors = ["Hitoshi Manabe <int.toshi13@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+torch = ">=2.0.0"
+pydantic = "^1.10.7"
+sentence-transformers = "^2.2.2"
+datasets = "^2.14.4"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.3.0"
+flake8 = "^3.7.9"
+isort = "^5.7.0"
+mypy = "^1.4.1"
+pytest = "^7.4.0"
+pytest-cov = "^2.8.1"
+types-requests = "^2.27.24"
+pytest-mock = "^3.11.1"
+
+[tool.poetry.scripts]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
