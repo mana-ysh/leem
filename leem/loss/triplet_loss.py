@@ -8,7 +8,9 @@ from leem.similarity import cos
 
 class TripletLoss(loss_base.TripletLossBase):
     def __init__(
-        self, margin: float = 1.0, sim: sim_base.SimilarityBase = cos.CosineSimilarity
+        self,
+        margin: float = 1.0,
+        sim: sim_base.SimilarityBase = cos.CosineSimilarity(),
     ) -> None:
         self._sim = sim
         self._margin = margin

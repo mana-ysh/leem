@@ -43,7 +43,10 @@ class Trainer:
         for epoch in range(self._num_epoch):
             self._model.train()
             train_dataset_loader = DataLoader(
-                dataset=self._train_dataset, batch_size=self._batch_size, shuffle=True
+                dataset=self._train_dataset,
+                batch_size=self._batch_size,
+                shuffle=True,
+                collate_fn=dataset.TripletDataset.collate_fn,
             )
             for batch in train_dataset_loader:
                 num_steps += 1
@@ -63,25 +66,33 @@ class Trainer:
                 num_steps += 1
                 if num_steps % 1000 == 0:
                     logging.info(
-                        f"Processed {num_steps}th batch at {(epoch+1)}th epoch. loss={loss}"
+                        f"Processed {num_steps}th batch at {(epoch+1)}th "
+                        + "epoch. loss={loss}"
                     )
 
             if self._validation_dataset:
                 metrics = self._evaluate()
                 logging.info(
-                    f"Evalation metrics for validation dataset at {(epoch+1)}th epoch: {metrics}"
+                    "Evalation metrics for validation dataset at "
+                    + f"{(epoch+1)}th epoch: {metrics}"
                 )
 
-    def _evaluate(self) -> metrics.MetricsBase:
+    def _evaluate(self) -> metrics.TripletMetricsBase:
         self._model.eval()
+        if self._validation_dataset is None:
+            raise ValueError("Validation dataset is not set.")
         validation_dataset_loader = DataLoader(
-            dataset=self._validation_dataset, batch_size=self._batch_size, shuffle=True
+            dataset=self._validation_dataset,
+            batch_size=self._batch_size,
+            shuffle=True,
+            collate_fn=dataset.TripletDataset.collate_fn,
         )
         if self._validation_metric_type == MetricType.TRIPLET_ACCURACY:
             metric = triplet_accuracy.TripletAccuracy()
         else:
             raise ValueError(
-                f"Unavailable metric for validation: {self._validation_metric_type}"
+                "Unavailable metric for validation: "
+                + f"{self._validation_metric_type}"
             )
         with torch.no_grad():
             for batch in validation_dataset_loader:
@@ -91,5 +102,9 @@ class Trainer:
                 anc_embeddings = self._model.forward(batch_anc)
                 pos_embeddings = self._model.forward(batch_pos)
                 neg_embeddings = self._model.forward(batch_neg)
-                metric.update_batch(anc_embeddings, pos_embeddings, neg_embeddings)
+                metric.update_batch(
+                    anc_embeddings,
+                    pos_embeddings,
+                    neg_embeddings,
+                )
         return metric

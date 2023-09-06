@@ -10,6 +10,9 @@ class TripletAccuracy(metrics.TripletMetricsBase):
     accuracy: float = -1
     similariy: base.SimilarityBase = cos.CosineSimilarity()
 
+    class Config:
+        arbitrary_types_allowed = True
+
     def update_batch(
         self,
         anchor_embeddings: torch.Tensor,

@@ -25,3 +25,9 @@ class TripletDataset(Dataset[example.TripletExample]):
 
     def __getitem__(self, index: int) -> example.TripletExample:
         return self._examples[index]
+
+    @staticmethod
+    def collate_fn(
+        batch: List[example.TripletExample],
+    ) -> List[example.TripletExample]:
+        return batch

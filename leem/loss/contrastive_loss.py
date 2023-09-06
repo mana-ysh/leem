@@ -8,7 +8,9 @@ from leem.similarity import cos
 
 class InBatchNegativeContrastiveLoss(base.PairwiseLossBase):
     def __init__(
-        self, tau: float = 0.0, sim: sim_base.SimilarityBase = cos.CosineSimilarity
+        self,
+        tau: float = 0.0,
+        sim: sim_base.SimilarityBase = cos.CosineSimilarity(),
     ) -> None:
         self._tau = tau
         self._sim = sim
